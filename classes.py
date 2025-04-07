@@ -1,3 +1,4 @@
+import pygame
 class pokemon:
     def __init__(self, name, level, health, type1, type2, move1, move2, move3, move4):
         self.name = name
@@ -29,3 +30,39 @@ class move:
         if self.damage>0:
             print("It dealt",str(self.damage)+" damage to",str(enemy.name)+"!")
             enemy.health -= self.damage
+
+class sprite(pygame.sprite.Sprite):
+    def __init__(self, image, x, y, scale):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.image = pygame.transform.scale(self.image, (int(self.rect.width * scale), int(self.rect.height * scale)))
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)  # Draw the sprite on the surface
+
+class textBox(pygame.sprite.Sprite):
+    def __init__(self, text, x, y):
+        super().__init__()
+        self.text = text
+        self.font = pygame.font.Font(None, 36)
+
+        # Load and scale background
+        original_bg = pygame.image.load("textBox.png").convert_alpha()
+        self.background = pygame.transform.scale(original_bg, (600, 100))  # Resize to manageable size
+        self.rect = self.background.get_rect()
+        self.rect.topleft = (x, y)
+
+        # Render the text
+        self.text_image = self.font.render(self.text, True, (0, 0, 0))
+
+        # Position text relative to the background (padding)
+        self.text_pos = (
+            x + 20,  # 20 pixels from left of box
+            y + 20   # 20 pixels from top of box
+        )
+
+    def draw(self, surface):
+        surface.blit(self.background, self.rect)         # Draw background first
+        surface.blit(self.text_image, self.text_pos)     # Then draw text on top
