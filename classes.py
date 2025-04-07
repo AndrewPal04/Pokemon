@@ -73,7 +73,7 @@ class Button:
     def __init__(self, image_path, pos):
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
-
+        self.image = pygame.transform.scale(self.image, (int(self.rect.width * 0.4), int(self.rect.height * 0.4)))
     def is_clicked(self, screen, event):
         # Draw the button
         screen.blit(self.image, self.rect)

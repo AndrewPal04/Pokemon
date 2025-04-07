@@ -50,43 +50,45 @@ while running:
     clock.tick(60)
 
 #Save slot buttons
-save_slot1 = Button("save1_img.png", 500, 100)
-save_slot2 = Button("save2_img.png", 500, 200)
-save_slot3 = Button("save3_img.png", 500, 300)
+save_slot1 = Button("save1_img.png", (300, -100))
+save_slot2 = Button("save2_img.png", (300, 50))
+save_slot3 = Button("save3_img.png", (300, 200))
+player={}
+newPlayer=False
 # Loop for save slots
 running = True
 while running:
     screen.fill((50, 50, 50))
-    save_slot1.draw(screen)
-    save_slot2.draw(screen)
-    save_slot3.draw(screen)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
     if save_slot1.is_clicked(screen, event):
-        f=open("saveSlot1.json")
-        data=json.load(f)
-        if not data:
-            pass
+        with open("saveSlot1.json") as f:
+            data = json.load(f)
+        if data == {}:
+            newPlayer = True
         else:
-            player=json.load(f)
-            running=False
+            player = data
+            running = False
+
     if save_slot2.is_clicked(screen, event):
-        f=open("saveSlot2.json")
-        data=json.load(f)
-        if not data:
-            pass
+        with open("saveSlot2.json") as f:
+            data = json.load(f)
+        if data == {}:
+            newPlayer = True
         else:
-            player=json.load(f)
-            running=False
+            player = data
+            running = False
+
     if save_slot3.is_clicked(screen, event):
-        f=open("saveSlot3.json")
-        data=json.load(f)
-        if not data:
-            pass
+        with open("saveSlot3.json") as f:
+            data = json.load(f)
+        if data == {}:
+            newPlayer = True
         else:
-            player=json.load(f)
-            running=False
+            player = data
+            running = False
+
     pygame.display.update()
     clock.tick(60)
 
