@@ -41,6 +41,8 @@ class sprite(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (int(self.rect.width * scale), int(self.rect.height * scale)))
     def draw(self, surface):
         surface.blit(self.image, self.rect)  # Draw the sprite on the surface
+    def update(self):
+        self.x +=20
 
 class textBox(pygame.sprite.Sprite):
     def __init__(self, text, x, y):
@@ -50,9 +52,9 @@ class textBox(pygame.sprite.Sprite):
 
         # Load and scale background
         original_bg = pygame.image.load("textBox.png").convert_alpha()
-        self.background = pygame.transform.scale(original_bg, (600, 100))  # Resize to manageable size
+        self.background = pygame.transform.scale(original_bg, (500, 150))  # Resize to manageable size
         self.rect = self.background.get_rect()
-        self.rect.topleft = (x, y)
+        self.rect.topleft = (x, y-40)
 
         # Render the text
         self.text_image = self.font.render(self.text, True, (0, 0, 0))
@@ -60,9 +62,24 @@ class textBox(pygame.sprite.Sprite):
         # Position text relative to the background (padding)
         self.text_pos = (
             x + 20,  # 20 pixels from left of box
-            y + 20   # 20 pixels from top of box
+            y + 30  # 20 pixels from top of box
         )
 
     def draw(self, surface):
         surface.blit(self.background, self.rect)         # Draw background first
         surface.blit(self.text_image, self.text_pos)     # Then draw text on top
+
+class Button:
+    def __init__(self, image_path, pos):
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.rect = self.image.get_rect(topleft=pos)
+
+    def is_clicked(self, screen, event):
+        # Draw the button
+        screen.blit(self.image, self.rect)
+
+        # Handle click
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                return True
+        return False
