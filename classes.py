@@ -83,3 +83,9 @@ class Button:
             if self.rect.collidepoint(event.pos):
                 return True
         return False
+
+class Player:
+    def __init__(self, name, pokemon_list):
+        self.name = name
+        self.pokemon_list = pokemon_list
+        self.current_pokemon = pokemon_list[0] if pokemon_list else None

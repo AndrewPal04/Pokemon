@@ -3,6 +3,7 @@ from classes import sprite
 from classes import textBox
 from classes import Button
 import json
+import time
 
 # Pygame setup
 screenWidth, screenHeight = 1000, 500
@@ -91,6 +92,51 @@ while running:
 
     pygame.display.update()
     clock.tick(60)
+textBoxes = [
+    textBox("Oh, you haven't been given a Pymon?", 350, 350),
+    textBox("...Well lucky for you I have a suprise.", 350, 350),
+    textBox("Your first Pymon!", 350, 350)
+]
+current_box = 0
+running=True
+if newPlayer:#Finish of introduction
+    while running:
+        screen.fill((50, 50, 50))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if current_box < len(textBoxes) - 1:
+                current_box += 1
+            else:
+                current_box = None
+                running=False
+        # Draw professor
+        professor.draw(screen)
 
-print(player)
-pygame.quit()
+        # Draw current text box
+        if current_box is not None:
+            textBoxes[current_box].draw(screen)
+            pygame.display.update()
+            time.sleep(1)
+            clock.tick(60)
+
+#Starters
+starter1 = Button("pyrazzle.png", (0, 100))
+starter2 = Button("aquabble.png", (300, 100))
+starter3 = Button("sproutuft.png", (600, 100))
+running = True
+while running:
+    screen.fill((50, 50, 50))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    if starter1.is_clicked(screen, event):
+        pass
+    if starter2.is_clicked(screen, event):
+        pass
+    if starter3.is_clicked(screen, event):
+        pass
+
+    pygame.display.update()
+    clock.tick(60)
