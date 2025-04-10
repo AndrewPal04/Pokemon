@@ -6,20 +6,20 @@ import json
 import time
 
 # Pygame setup
-screenWidth, screenHeight = 1000, 500
+screenWidth, screenHeight = 1500, 1000
 pygame.init()
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 clock = pygame.time.Clock()
 
 # Professor Sprite
 prof_img = pygame.image.load("professor.png")
-professor = sprite(prof_img, 50, 100, 0.3)
+professor = sprite(prof_img, 50, 100, 0.7)
 
 # Text Boxes
 textBoxes = [
-    textBox("Hello, welcome to the world of Pymon!", 350, 350),
-    textBox("I am your guide, Professor Cirus.", 350, 350),
-    textBox("Let's begin your journey!", 350, 350)
+    textBox("Hello, welcome to the world of Pymon!", 500, 500, scale = 1.7),
+    textBox("I am your guide, Professor Cirus.", 500, 500, scale = 1.7),
+    textBox("Let's begin your journey!", 500, 500, scale = 1.7)
 ]
 current_box = 0
 
@@ -49,94 +49,106 @@ while running:
 
     pygame.display.update()
     clock.tick(60)
+# Save slot buttons
+save_slot1 = Button("save1_img.png", (450, -150),scale=0.6)
+save_slot2 = Button("save2_img.png", (450, 200), scale=0.6)
+save_slot3 = Button("save3_img.png", (450, 550), scale=0.6)
+player = {}
+newPlayer = False
 
-#Save slot buttons
-save_slot1 = Button("save1_img.png", (300, -100))
-save_slot2 = Button("save2_img.png", (300, 50))
-save_slot3 = Button("save3_img.png", (300, 200))
-player={}
-newPlayer=False
+save_buttons = [save_slot1, save_slot2, save_slot3]
+save_files = ["saveSlot1.json", "saveSlot2.json", "saveSlot3.json"]
+
 # Loop for save slots
 running = True
 while running:
     screen.fill((50, 50, 50))
+    # Update & draw buttons
+    for button in save_buttons:
+        button.update()
+        button.draw(screen)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-    if save_slot1.is_clicked(screen, event):
-        with open("saveSlot1.json") as f:
-            data = json.load(f)
-        if data == {}:
-            newPlayer = True
-        else:
-            player = data
+            pygame.quit()
             running = False
 
-    if save_slot2.is_clicked(screen, event):
-        with open("saveSlot2.json") as f:
-            data = json.load(f)
-        if data == {}:
-            newPlayer = True
-        else:
-            player = data
-            running = False
-
-    if save_slot3.is_clicked(screen, event):
-        with open("saveSlot3.json") as f:
-            data = json.load(f)
-        if data == {}:
-            newPlayer = True
-        else:
-            player = data
-            running = False
+        for i, button in enumerate(save_buttons):
+            if button.is_clicked(event):
+                with open(save_files[i]) as f:
+                    data = json.load(f)
+                if data == {}:
+                    newPlayer = True
+                else:
+                    player = data
+                running = False  # Exit after selection
 
     pygame.display.update()
     clock.tick(60)
+
 textBoxes = [
-    textBox("Oh, you haven't been given a Pymon?", 350, 350),
-    textBox("...Well lucky for you I have a suprise.", 350, 350),
-    textBox("Your first Pymon!", 350, 350)
+    textBox("Oh, you haven't been given a Pymon?",500, 500, scale = 1.7),
+    textBox("...Well lucky for you I have a suprise.",500, 500, scale = 1.7),
+    textBox("Your first Pymon!",500, 500, scale = 1.7)
 ]
 current_box = 0
 running=True
-if newPlayer:#Finish of introduction
+if newPlayer:  # Finish of introduction
     while running:
         screen.fill((50, 50, 50))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if current_box < len(textBoxes) - 1:
-                current_box += 1
-            else:
-                current_box = None
-                running=False
+
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if current_box < len(textBoxes) - 1:
+                    current_box += 1
+                else:
+                    current_box = None
+                    running = False
+
         # Draw professor
         professor.draw(screen)
 
         # Draw current text box
         if current_box is not None:
             textBoxes[current_box].draw(screen)
-            pygame.display.update()
-            time.sleep(1)
-            clock.tick(60)
+
+        pygame.display.update()
+        clock.tick(60)
 
 #Starters
-starter1 = Button("pyrazzle.png", (0, 100))
-starter2 = Button("aquabble.png", (300, 100))
-starter3 = Button("sproutuft.png", (600, 100))
+# Create individual buttons
+starter1 = Button("pyrazzle.png", (150, 200), scale=0.4)
+starter2 = Button("aquabble.png", (550, 200), scale=0.4)
+starter3 = Button("sproutuft.png", (950, 200), scale=0.4)
+
 running = True
 while running:
     screen.fill((50, 50, 50))
+
+    # Update and draw each button
+    starter1.update()
+    starter1.draw(screen)
+
+    starter2.update()
+    starter2.draw(screen)
+
+    starter3.update()
+    starter3.draw(screen)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    if starter1.is_clicked(screen, event):
-        pass
-    if starter2.is_clicked(screen, event):
-        pass
-    if starter3.is_clicked(screen, event):
-        pass
+
+        if starter1.is_clicked(event):
+            print("Starter 1 (Pyrazzle) clicked!")
+        if starter2.is_clicked(event):
+            print("Starter 2 (Aquabble) clicked!")
+        if starter3.is_clicked(event):
+            print("Starter 3 (Sproutuft) clicked!")
 
     pygame.display.update()
     clock.tick(60)
+
