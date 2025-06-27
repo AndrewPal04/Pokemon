@@ -1,1 +1,28 @@
-{}
+{
+    "name": "Ryott",
+    "pymon_list": [
+        {
+            "name": "Pyrazzle",
+            "level": 5,
+            "health": 39,
+            "type1": "Fire",
+            "type2": null,
+            "moves": [
+                {
+                    "name": "Tackle",
+                    "type": "Normal",
+                    "damage": 40,
+                    "pp": 100,
+                    "effects": 0
+                },
+                {
+                    "name": "Flame Shot",
+                    "type": "Fire",
+                    "damage": 50,
+                    "pp": 100,
+                    "effects": 0
+                }
+            ]
+        }
+    ]
+}

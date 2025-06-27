@@ -59,6 +59,13 @@ save_buttons = [save_slot1, save_slot2, save_slot3]
 save_files = ["saveSlot1.json", "saveSlot2.json", "saveSlot3.json"]
 player = None
 
+#Player Sprites
+userNorthIMG=[pygame.image.load("userNorth1.png"), pygame.image.load("userNorth2.png"), pygame.image.load("userNorth3.png"), pygame.image.load("userNorth4.png")]
+userEastIMG=[pygame.image.load("userEast1.png"), pygame.image.load("userEast2.png"), pygame.image.load("userEast3.png"), pygame.image.load("userEast4.png")]
+userSouthIMG=[pygame.image.load("userSouth1.png"), pygame.image.load("userSouth2.png"), pygame.image.load("userSouth3.png"), pygame.image.load("userSouth4.png")]
+userWestIMG=[pygame.image.load("userWest1.png"), pygame.image.load("userWest2.png"), pygame.image.load("userWest3.png"), pygame.image.load("userWest4.png")]
+
+
 # Loop for save slots
 running = True
 while running:
@@ -85,7 +92,7 @@ while running:
 
                 if data == {}:
                     newPlayer = True
-                    user = Player("Ryott")
+                    user = Player("Ryott", userSouthIMG[0], 250, 250, 4)
                 else:
                     user = Player.from_dict(data)
 
@@ -155,10 +162,13 @@ while running:
 
         if starter1.is_clicked(event):
             starter="Pyrazzle"
+            running=False
         if starter2.is_clicked(event):
             starter="Aquabble"
+            running=False
         if starter3.is_clicked(event):
             starter="Sproutuft"
+            running=False
 
     pygame.display.update()
     clock.tick(60)
@@ -171,9 +181,9 @@ Leaf_Slash= move("Leaf Slash", "Grass", 55, 100, 0)
 
 # Create starter Pymon
 
-Pyrazzle=Pymon("Pyrazzle", 5, "Fire", 39, 52, 43, 65, 50, 60, [Tackle, Flame_Shot])
-Aquabble=Pymon("Aquabble", 5, "Water", 44, 48, 65, 43, 50, 64, [Tackle, Water_Pierce])
-Sproutuft=Pymon("Sproutuft", 5, "Grass", 45, 49, 49, 65, 65, 45, [Tackle, Leaf_Slash])
+Pyrazzle=Pymon("Pyrazzle", 5, 39,"Fire",None, [Tackle, Flame_Shot])
+Aquabble=Pymon("Aquabble", 5, 44, "Water",None, [Tackle, Water_Pierce])
+Sproutuft=Pymon("Sproutuft", 5, 45, "Grass", None, [Tackle, Leaf_Slash])
 
 #Assign Starter
 if starter=="Pyrazzle":
@@ -190,15 +200,18 @@ if selected_slot_index is not None:
 
 def home():
     roomIMG=pygame.image.load("home_room.png")
-    room=sprite(roomIMG, 0, 0, 1.0)
+    room=sprite(roomIMG, 0, 0, 1)
+    
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+        screen.fill((0,0,0))
         room.draw(screen)
         #Add player update/sprite here
-        
+        user.draw(screen)
         #Also add logic to change screen based on player position
         pygame.display.update()
         clock.tick(60)

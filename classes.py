@@ -2,16 +2,13 @@ import pygame
 import json
 
 class Pymon:
-    def __init__(self, name, level, health, type1, type2, move1, move2, move3, move4):
+    def __init__(self, name, level, health, type1, type2, moves):
         self.name = name
         self.level = level
         self.type1 = type1
         self.type2 = type2
         self.health = health
-        self.move1 = move1
-        self.move2 = move2
-        self.move3 = move3
-        self.move4 = move4
+        self.moves = moves
     def lvlUp(self):
         self.level +=1
         print(self.name,"leveled up to level",str(self.level)+"!")
@@ -26,12 +23,8 @@ class Pymon:
             "health": self.health,
             "type1": self.type1,
             "type2": self.type2,
-            "move1": self.move1.to_dict(),
-            "move2": self.move2.to_dict(),
-            "move3": self.move3.to_dict(),
-            "move4": self.move4.to_dict()
+            "moves": [m.to_dict() for m in self.moves]
         }
-
     @staticmethod
     def from_dict(data):
         return Pymon(
@@ -40,10 +33,7 @@ class Pymon:
             health=data["health"],
             type1=data["type1"],
             type2=data["type2"],
-            move1=move.from_dict(data["move1"]),
-            move2=move.from_dict(data["move2"]),
-            move3=move.from_dict(data["move3"]),
-            move4=move.from_dict(data["move4"])
+            moves=[move.from_dict(m) for m in data["moves"]]
         )
 
 
@@ -170,13 +160,15 @@ class Button:
 class Player(pygame.sprite.Sprite):
     def __init__(self, name, image, x, y, scale):
         super().__init__()
-        self.image = image
+        width, height = image.get_size()
+        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.image = pygame.transform.scale(self.image, (int(self.rect.width * scale), int(self.rect.height * scale)))
         self.name = name
         self.pymon_list = []
+
+
     def draw(self, surface):
         surface.blit(self.image, self.rect)  # Draw the sprite on the surface
     def catch_pymon(self, new_pymon):
@@ -192,14 +184,28 @@ class Player(pygame.sprite.Sprite):
             self.rect.x -=5
         if keystate[pygame.K_RIGHT]:
             self.rect.x +=5
+        #Staying in screen bounds
+        if self.rect.top<0:
+            self.rect.top=0
+        if self.rect.bottom>1000:
+            self.rect.bottom=1000
+        if self.rect.left<0:
+            self.rect.left=0
+        if self.rect.right>1500:
+            self.rect.right=1500
     def to_dict(self):
         return {
             "name":self.name,
             "pymon_list":[p.to_dict() for p in self.pymon_list]
         }
-    @staticmethod
-    def from_dict(data):
-        player=Player(data["name"])
-        for p in data["pymon_list"]:
-            player.catch_pymon(Pymon.from_dict(p))
+    @classmethod
+    def from_dict(cls, data):
+        name = data.get("name", "DefaultName")
+        x = data.get("x", 750)
+        y = data.get("y", 700)
+        scale = data.get("scale", 0.15)
+
+        image = pygame.image.load("userSouth1.png")
+
+        player = cls(name, image, x, y, scale)
         return player
