@@ -1,5 +1,7 @@
 import pygame
-class pokemon:
+import json
+
+class Pymon:
     def __init__(self, name, level, health, type1, type2, move1, move2, move3, move4):
         self.name = name
         self.level = level
@@ -17,6 +19,33 @@ class pokemon:
         print("You sent out",str(self.name)+"!")
     def retreat(self):
         print("You brought back",str(self.name)+"!")
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "level": self.level,
+            "health": self.health,
+            "type1": self.type1,
+            "type2": self.type2,
+            "move1": self.move1.to_dict(),
+            "move2": self.move2.to_dict(),
+            "move3": self.move3.to_dict(),
+            "move4": self.move4.to_dict()
+        }
+
+    @staticmethod
+    def from_dict(data):
+        return Pymon(
+            name=data["name"],
+            level=data["level"],
+            health=data["health"],
+            type1=data["type1"],
+            type2=data["type2"],
+            move1=move.from_dict(data["move1"]),
+            move2=move.from_dict(data["move2"]),
+            move3=move.from_dict(data["move3"]),
+            move4=move.from_dict(data["move4"])
+        )
+
 
 class move:
     def __init__(self, name, type, damage, pp, effects):
@@ -30,6 +59,25 @@ class move:
         if self.damage>0:
             print("It dealt",str(self.damage)+" damage to",str(enemy.name)+"!")
             enemy.health -= self.damage
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "type": self.type,
+            "damage": self.damage,
+            "pp": self.pp,
+            "effects": self.effects
+        }
+
+    @staticmethod
+    def from_dict(data):
+        return move(
+            name=data["name"],
+            type=data["type"],
+            damage=data["damage"],
+            pp=data["pp"],
+            effects=data["effects"]
+        )
+
 
 class sprite(pygame.sprite.Sprite):
     def __init__(self, image, x, y, scale):
@@ -42,7 +90,7 @@ class sprite(pygame.sprite.Sprite):
     def draw(self, surface):
         surface.blit(self.image, self.rect)  # Draw the sprite on the surface
     def update(self):
-        self.x +=20
+        self.rect.x +=20
 
 class textBox(pygame.sprite.Sprite):
     def __init__(self, text, x, y, scale=1.7):
@@ -120,7 +168,20 @@ class Button:
         return event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos)
 
 class Player:
-    def __init__(self, name, pokemon_list):
+    def __init__(self, name):
         self.name = name
-        self.pokemon_list = pokemon_list
-        self.current_pokemon = pokemon_list[0] if pokemon_list else None
+        self.pymon_list = []
+    def catch_pymon(self, new_pymon):
+        self.pymon_list.append(new_pymon)
+        print(f"{self.name} aquired a new Pymon: {new_pymon.name}!")
+    def to_dict(self):
+        return {
+            "name":self.name,
+            "pymon_list":[p.to_dict() for p in self.pymon_list]
+        }
+    @staticmethod
+    def from_dict(data):
+        player=Player(data["name"])
+        for p in data["pymon_list"]:
+            player.catch_pymon(Pymon.from_dict(p))
+        return player
