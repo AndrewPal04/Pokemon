@@ -188,3 +188,21 @@ if selected_slot_index is not None:
     with open(save_files[selected_slot_index], 'w') as f:
         json.dump(user.to_dict(), f, indent=4)
 
+def home():
+    roomIMG=pygame.image.load("home_room.png")
+    room=sprite(roomIMG, 0, 0, 1.0)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        room.draw(screen)
+        #Add player update/sprite here
+
+
+        pygame.display.update()
+        clock.tick(60)
+def home_city():
+    pass
+def route_1():
+    pass
