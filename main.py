@@ -198,11 +198,13 @@ def home():
                 quit()
         room.draw(screen)
         #Add player update/sprite here
-
-
+        
+        #Also add logic to change screen based on player position
         pygame.display.update()
         clock.tick(60)
 def home_city():
     pass
 def route_1():
     pass
+
+home()

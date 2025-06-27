@@ -167,13 +167,31 @@ class Button:
     def is_clicked(self, event):
         return event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos)
 
-class Player:
-    def __init__(self, name):
+class Player(pygame.sprite.Sprite):
+    def __init__(self, name, image, x, y, scale):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.image = pygame.transform.scale(self.image, (int(self.rect.width * scale), int(self.rect.height * scale)))
         self.name = name
         self.pymon_list = []
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)  # Draw the sprite on the surface
     def catch_pymon(self, new_pymon):
         self.pymon_list.append(new_pymon)
         print(f"{self.name} aquired a new Pymon: {new_pymon.name}!")
+    def update(self):
+        keystate=pygame.key.get_pressed()
+        if keystate[pygame.K_UP]:
+            self.rect.y -=5
+        if keystate[pygame.K_DOWN]:
+            self.rect.y +=5
+        if keystate[pygame.K_LEFT]:
+            self.rect.x -=5
+        if keystate[pygame.K_RIGHT]:
+            self.rect.x +=5
     def to_dict(self):
         return {
             "name":self.name,
