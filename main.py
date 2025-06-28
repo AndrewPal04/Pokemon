@@ -112,7 +112,7 @@ while running:
 
                 if data == {}:
                     newPlayer = True
-                    user = Player("Ryott", userNorthIMG, userSouthIMG, userEastIMG, userWestIMG, 250, 250, 4)
+                    user = Player("Ryott", userNorthIMG, userSouthIMG, userEastIMG, userWestIMG, 250, 250, 4, 5)
                 else:
                     user = Player.from_dict(data, userNorthIMG, userSouthIMG, userEastIMG, userWestIMG)
 
@@ -222,8 +222,9 @@ if selected_slot_index is not None:
 def home():
     roomIMG=pygame.image.load("home_room.png")
     room=sprite(roomIMG, 0, 0, 1)
-    
-
+    user.speed=5
+    user.scale=4
+    user.update_image()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -273,11 +274,35 @@ def home():
         #Exit
         exit_rect=pygame.Rect(580, 900, 150, 100)
         if user.rect.colliderect(exit_rect):
-            home_city()
+            screen.fill((255,255,255))
+            pygame.display.update()
+            pygame.time.delay(500)
+            home_city("home")
+            break
         pygame.display.update()
         clock.tick(60)
-def home_city():
-    pass
+    
+def home_city(from_location):
+    home_cityIMG=pygame.image.load("home_city.png")
+    home_city=sprite(home_cityIMG, 0, 0, 1)
+    user.scale=2
+    user.update_image()
+    user.speed=5
+    if from_location=="home":
+        user.rect.x=390
+        user.rect.y=750
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        home_city.draw(screen)
+        user.draw(screen)
+        user.update()
+        
+
+        pygame.display.update()
+        clock.tick(60)
 def route_1():
     pass
 

@@ -158,9 +158,10 @@ class Button:
         return event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos)
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, name, north_images, south_images, east_images, west_images, x, y, scale):
+    def __init__(self, name, north_images, south_images, east_images, west_images, x, y, scale, speed):
         super().__init__()
         self.name = name
+        self.speed=speed
         self.north_images = north_images
         self.south_images = south_images
         self.east_images = east_images
@@ -195,21 +196,31 @@ class Player(pygame.sprite.Sprite):
         moved = False
 
         if keystate[pygame.K_UP]:
-            self.rect.y -= 5
+            self.rect.y -= self.speed
             self.direction = "north"
             moved = True
         elif keystate[pygame.K_DOWN]:
-            self.rect.y += 5
+            self.rect.y += self.speed
             self.direction = "south"
             moved = True
         elif keystate[pygame.K_LEFT]:
-            self.rect.x -= 5
+            self.rect.x -= self.speed
             self.direction = "west"
             moved = True
         elif keystate[pygame.K_RIGHT]:
-            self.rect.x += 5
+            self.rect.x += self.speed
             self.direction = "east"
             moved = True
+        
+        #On screen boundaries
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > 1500:
+            self.rect.right = 1500
+        if self.rect.top < 0:
+            self.rect.top = 0
+        if self.rect.bottom > 1000:
+            self.rect.bottom = 1000
 
         if moved:
             self.frame_timer += 1
@@ -220,16 +231,6 @@ class Player(pygame.sprite.Sprite):
         else:
             self.current_frame = 0
             self.update_image()
-
-        # Stay in bounds
-        if self.rect.top < 0:
-            self.rect.top = 0
-        if self.rect.bottom > 1000:
-            self.rect.bottom = 1000
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > 1500:
-            self.rect.right = 1500
 
     def update_image(self):
         if self.direction == "north":
@@ -249,12 +250,16 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(img, (scaled_width, scaled_height))
 
+        center=self.rect.center
+        self.rect=self.image.get_rect(center=center)
+
     def to_dict(self):
         return {
             "name": self.name,
             "x": self.rect.x,
             "y": self.rect.y,
             "scale": self.scale,
+            "speed": self.speed,  # add this line
             "pymon_list": [p.to_dict() for p in self.pymon_list]
         }
 
@@ -264,7 +269,8 @@ class Player(pygame.sprite.Sprite):
         x = data.get("x", 750)
         y = data.get("y", 700)
         scale = data.get("scale", 0.4)
+        speed = data.get("speed", 5)  # Default if missing
 
-        player = cls(name, north_images, south_images, east_images, west_images, x, y, scale)
+        player = cls(name, north_images, south_images, east_images, west_images, x, y, scale, speed)
         player.pymon_list = [Pymon.from_dict(p) for p in data.get("pymon_list", [])]
         return player

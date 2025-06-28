@@ -3,6 +3,7 @@
     "x": 250,
     "y": 250,
     "scale": 4,
+    "speed": 5,
     "pymon_list": [
         {
             "name": "Pyrazzle",
