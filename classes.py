@@ -158,54 +158,113 @@ class Button:
         return event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos)
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, name, image, x, y, scale):
+    def __init__(self, name, north_images, south_images, east_images, west_images, x, y, scale):
         super().__init__()
-        width, height = image.get_size()
-        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+        self.name = name
+        self.north_images = north_images
+        self.south_images = south_images
+        self.east_images = east_images
+        self.west_images = west_images
+
+        self.direction = "south"
+        self.current_frame = 0
+        self.frame_timer = 0
+        self.frame_delay = 5  # Frames before advancing animation
+
+        # Scale first frame image
+        self.image = self.south_images[0]
+        width, height = self.image.get_size()
+        self.scale = scale
+        self.image = pygame.transform.scale(self.image, (int(width * scale), int(height * scale)))
+
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.name = name
+
         self.pymon_list = []
 
-
     def draw(self, surface):
-        surface.blit(self.image, self.rect)  # Draw the sprite on the surface
+        surface.blit(self.image, self.rect)
+
     def catch_pymon(self, new_pymon):
         self.pymon_list.append(new_pymon)
-        print(f"{self.name} aquired a new Pymon: {new_pymon.name}!")
+        print(f"{self.name} acquired a new Pymon: {new_pymon.name}!")
+
     def update(self):
-        keystate=pygame.key.get_pressed()
+        keystate = pygame.key.get_pressed()
+        moved = False
+
         if keystate[pygame.K_UP]:
-            self.rect.y -=5
-        if keystate[pygame.K_DOWN]:
-            self.rect.y +=5
-        if keystate[pygame.K_LEFT]:
-            self.rect.x -=5
-        if keystate[pygame.K_RIGHT]:
-            self.rect.x +=5
-        #Staying in screen bounds
-        if self.rect.top<0:
-            self.rect.top=0
-        if self.rect.bottom>1000:
-            self.rect.bottom=1000
-        if self.rect.left<0:
-            self.rect.left=0
-        if self.rect.right>1500:
-            self.rect.right=1500
+            self.rect.y -= 5
+            self.direction = "north"
+            moved = True
+        elif keystate[pygame.K_DOWN]:
+            self.rect.y += 5
+            self.direction = "south"
+            moved = True
+        elif keystate[pygame.K_LEFT]:
+            self.rect.x -= 5
+            self.direction = "west"
+            moved = True
+        elif keystate[pygame.K_RIGHT]:
+            self.rect.x += 5
+            self.direction = "east"
+            moved = True
+
+        if moved:
+            self.frame_timer += 1
+            if self.frame_timer >= self.frame_delay:
+                self.current_frame = (self.current_frame + 1) % 4
+                self.update_image()
+                self.frame_timer = 0
+        else:
+            self.current_frame = 0
+            self.update_image()
+
+        # Stay in bounds
+        if self.rect.top < 0:
+            self.rect.top = 0
+        if self.rect.bottom > 1000:
+            self.rect.bottom = 1000
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > 1500:
+            self.rect.right = 1500
+
+    def update_image(self):
+        if self.direction == "north":
+            img = self.north_images[self.current_frame]
+        elif self.direction == "south":
+            img = self.south_images[self.current_frame]
+        elif self.direction == "east":
+            img = self.east_images[self.current_frame]
+        elif self.direction == "west":
+            img = self.west_images[self.current_frame]
+        else:
+            img = self.south_images[0]
+
+        original_width, original_height = img.get_size()
+        scaled_width = int(original_width * self.scale)
+        scaled_height = int(original_height * self.scale)
+
+        self.image = pygame.transform.scale(img, (scaled_width, scaled_height))
+
     def to_dict(self):
         return {
-            "name":self.name,
-            "pymon_list":[p.to_dict() for p in self.pymon_list]
+            "name": self.name,
+            "x": self.rect.x,
+            "y": self.rect.y,
+            "scale": self.scale,
+            "pymon_list": [p.to_dict() for p in self.pymon_list]
         }
+
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data, north_images, south_images, east_images, west_images):
         name = data.get("name", "DefaultName")
         x = data.get("x", 750)
         y = data.get("y", 700)
-        scale = data.get("scale", 0.15)
+        scale = data.get("scale", 0.4)
 
-        image = pygame.image.load("userSouth1.png")
-
-        player = cls(name, image, x, y, scale)
+        player = cls(name, north_images, south_images, east_images, west_images, x, y, scale)
+        player.pymon_list = [Pymon.from_dict(p) for p in data.get("pymon_list", [])]
         return player

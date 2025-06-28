@@ -60,10 +60,30 @@ save_files = ["saveSlot1.json", "saveSlot2.json", "saveSlot3.json"]
 player = None
 
 #Player Sprites
-userNorthIMG=[pygame.image.load("userNorth1.png"), pygame.image.load("userNorth2.png"), pygame.image.load("userNorth3.png"), pygame.image.load("userNorth4.png")]
-userEastIMG=[pygame.image.load("userEast1.png"), pygame.image.load("userEast2.png"), pygame.image.load("userEast3.png"), pygame.image.load("userEast4.png")]
-userSouthIMG=[pygame.image.load("userSouth1.png"), pygame.image.load("userSouth2.png"), pygame.image.load("userSouth3.png"), pygame.image.load("userSouth4.png")]
-userWestIMG=[pygame.image.load("userWest1.png"), pygame.image.load("userWest2.png"), pygame.image.load("userWest3.png"), pygame.image.load("userWest4.png")]
+userNorthIMG=[
+    pygame.image.load("userNorth1.png"),
+    pygame.image.load("userNorth2.png"),
+    pygame.image.load("userNorth3.png"),
+    pygame.image.load("userNorth4.png")
+    ]
+userEastIMG=[
+    pygame.image.load("userEast1.png"),
+    pygame.image.load("userEast2.png"),
+    pygame.image.load("userEast3.png"),
+    pygame.image.load("userEast4.png")
+    ]
+userSouthIMG=[
+    pygame.image.load("userSouth1.png"),
+    pygame.image.load("userSouth2.png"),
+    pygame.image.load("userSouth3.png"),
+    pygame.image.load("userSouth4.png")
+    ]
+userWestIMG=[
+    pygame.image.load("userWest1.png"),
+    pygame.image.load("userWest2.png"),
+    pygame.image.load("userWest3.png"),
+    pygame.image.load("userWest4.png")
+    ]
 
 
 # Loop for save slots
@@ -92,9 +112,9 @@ while running:
 
                 if data == {}:
                     newPlayer = True
-                    user = Player("Ryott", userSouthIMG[0], 250, 250, 4)
+                    user = Player("Ryott", userNorthIMG, userSouthIMG, userEastIMG, userWestIMG, 250, 250, 4)
                 else:
-                    user = Player.from_dict(data)
+                    user = Player.from_dict(data, userNorthIMG, userSouthIMG, userEastIMG, userWestIMG)
 
                 running = False
 
@@ -140,38 +160,39 @@ starter1 = Button("pyrazzle.png", (150, 200), scale=0.4)
 starter2 = Button("aquabble.png", (550, 200), scale=0.4)
 starter3 = Button("sproutuft.png", (950, 200), scale=0.4)
 
-pymon=[]
+pymon=[] 
 starter=None
-running = True
-while running:
-    screen.fill((50, 50, 50))
+if newPlayer:
+    running = True
+    while running:
+        screen.fill((50, 50, 50))
 
-    # Update and draw each button
-    starter1.update()
-    starter1.draw(screen)
+        # Update and draw each button
+        starter1.update()
+        starter1.draw(screen)
 
-    starter2.update()
-    starter2.draw(screen)
+        starter2.update()
+        starter2.draw(screen)
 
-    starter3.update()
-    starter3.draw(screen)
+        starter3.update()
+        starter3.draw(screen)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-        if starter1.is_clicked(event):
-            starter="Pyrazzle"
-            running=False
-        if starter2.is_clicked(event):
-            starter="Aquabble"
-            running=False
-        if starter3.is_clicked(event):
-            starter="Sproutuft"
-            running=False
+            if starter1.is_clicked(event):
+                starter="Pyrazzle"
+                running=False
+            if starter2.is_clicked(event):
+                starter="Aquabble"
+                running=False
+            if starter3.is_clicked(event):
+                starter="Sproutuft"
+                running=False
 
-    pygame.display.update()
-    clock.tick(60)
+        pygame.display.update()
+        clock.tick(60)
 
 #Starter Pymon
 Tackle= move("Tackle", "Normal", 40, 100, 0)
@@ -212,7 +233,47 @@ def home():
         room.draw(screen)
         #Add player update/sprite here
         user.draw(screen)
-        #Also add logic to change screen based on player position
+        user.update()
+        #Player Boundaries
+        #Bed
+        bed_rect=pygame.Rect(0, 100, 150, 250)
+        if user.rect.colliderect(bed_rect):
+            if user.rect.left < bed_rect.right and user.rect.right > bed_rect.right:
+                user.rect.left = bed_rect.right
+            if user.rect.top < bed_rect.bottom and user.rect.bottom > bed_rect.bottom:
+                user.rect.top = bed_rect.bottom
+        #Desk
+        desk_rect=pygame.Rect(200, 150, 200, 100)
+        if user.rect.colliderect(desk_rect):
+            if user.rect.left < desk_rect.right and user.rect.right > desk_rect.right:
+                user.rect.left = desk_rect.right
+            if user.rect.top < desk_rect.bottom and user.rect.bottom > desk_rect.bottom:
+                user.rect.top = desk_rect.bottom
+        #Cabinet
+        cabinet_rect=pygame.Rect(500, 150, 100, 100)
+        if user.rect.colliderect(cabinet_rect):
+            if user.rect.left < cabinet_rect.right and user.rect.right > cabinet_rect.right:
+                user.rect.left = cabinet_rect.right
+            if user.rect.top < cabinet_rect.bottom and user.rect.bottom > cabinet_rect.bottom:
+                user.rect.top = cabinet_rect.bottom
+        #Bookshelf
+        bookshelf_rect=pygame.Rect(1000, 150, 150, 100)
+        if user.rect.colliderect(bookshelf_rect):
+            if user.rect.top < bookshelf_rect.bottom and user.rect.bottom > bookshelf_rect.bottom:
+                user.rect.top = bookshelf_rect.bottom
+            if user.rect.left < bookshelf_rect.right and user.rect.right > bookshelf_rect.right:
+                user.rect.left = bookshelf_rect.right
+            if user.rect.right > bookshelf_rect.left and user.rect.left < bookshelf_rect.left:
+                user.rect.right = bookshelf_rect.left
+        #Walls
+        if user.rect.top < 100:
+            user.rect.top = 100
+        if user.rect.bottom > 900 and user.rect.left>700 or user.rect.bottom >900 and user.rect.right < 700:
+            user.rect.bottom = 900
+        #Exit
+        exit_rect=pygame.Rect(580, 900, 150, 100)
+        if user.rect.colliderect(exit_rect):
+            home_city()
         pygame.display.update()
         clock.tick(60)
 def home_city():

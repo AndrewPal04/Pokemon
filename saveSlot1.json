@@ -1,11 +1,14 @@
 {
     "name": "Ryott",
+    "x": 250,
+    "y": 250,
+    "scale": 4,
     "pymon_list": [
         {
-            "name": "Pyrazzle",
+            "name": "Sproutuft",
             "level": 5,
-            "health": 39,
-            "type1": "Fire",
+            "health": 45,
+            "type1": "Grass",
             "type2": null,
             "moves": [
                 {
@@ -16,9 +19,9 @@
                     "effects": 0
                 },
                 {
-                    "name": "Flame Shot",
-                    "type": "Fire",
-                    "damage": 50,
+                    "name": "Leaf Slash",
+                    "type": "Grass",
+                    "damage": 55,
                     "pp": 100,
                     "effects": 0
                 }
