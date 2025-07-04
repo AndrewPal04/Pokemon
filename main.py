@@ -300,10 +300,20 @@ def home_city(from_location):
         user.draw(screen)
         user.update()
         
+        house_rect=pygame.Rect(300, 600, 200, 200)
+        if user.rect.colliderect(house_rect):
+            if user.rect.left < house_rect.right and user.rect.right > house_rect.right:
+                user.rect.left = house_rect.right
+            if user.rect.top < house_rect.bottom and user.rect.bottom > house_rect.bottom:
+                user.rect.top = house_rect.bottom
+            if user.rect.right > house_rect.left and user.rect.left < house_rect.left:
+                user.rect.right = house_rect.left
+            if user.rect.bottom > house_rect.top and user.rect.top < house_rect.top:
+                user.rect.bottom = house_rect.top
 
         pygame.display.update()
         clock.tick(60)
-def route_1():
+def route_1():#Left of home city
     pass
 
 home()
