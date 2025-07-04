@@ -300,7 +300,7 @@ def home_city(from_location):
         user.draw(screen)
         user.update()
         
-        house_rect=pygame.Rect(300, 600, 200, 200)
+        house_rect=pygame.Rect(350, 550, 250, 150)
         if user.rect.colliderect(house_rect):
             if user.rect.left < house_rect.right and user.rect.right > house_rect.right:
                 user.rect.left = house_rect.right
@@ -310,9 +310,37 @@ def home_city(from_location):
                 user.rect.right = house_rect.left
             if user.rect.bottom > house_rect.top and user.rect.top < house_rect.top:
                 user.rect.bottom = house_rect.top
+        
+        house2=pygame.Rect(660,370,250,150)
+        if user.rect.colliderect(house2):
+            if user.rect.left < house2.right and user.rect.right > house2.right:
+                user.rect.left = house2.right
+            if user.rect.top < house2.bottom and user.rect.bottom > house2.bottom:
+                user.rect.top = house2.bottom
+            if user.rect.right > house2.left and user.rect.left < house2.left:
+                user.rect.right = house2.left
+            if user.rect.bottom > house2.top and user.rect.top < house2.top:
+                user.rect.bottom = house2.top
+        
+        house3=pygame.Rect(650, 50, 250, 150)
+        if user.rect.colliderect(house3):
+            if user.rect.left < house3.right and user.rect.right > house3.right:
+                user.rect.left = house3.right
+            if user.rect.top < house3.bottom and user.rect.bottom > house3.bottom:
+                user.rect.top = house3.bottom
+            if user.rect.right > house3.left and user.rect.left < house3.left:
+                user.rect.right = house3.left
+            if user.rect.bottom > house3.top and user.rect.top < house3.top:
+                user.rect.bottom = house3.top
+
+        print(user.rect.x, user.rect.y)
+        tree_polygon=pygame.polygon([(0, 0), (1500, 0), (1500, 100), (0, 100)])#Edit this to create polygon around trees
 
         pygame.display.update()
         clock.tick(60)
+    
+   
+    
 def route_1():#Left of home city
     pass
 
