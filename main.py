@@ -334,7 +334,27 @@ def home_city(from_location):
                 user.rect.bottom = house3.top
 
         print(user.rect.x, user.rect.y)
-        tree_polygon=pygame.polygon([(0, 0), (1500, 0), (1500, 100), (0, 100)])#Edit this to create polygon around trees
+        #Still need adjusting
+        tree_rect1=pygame.Rect(0, 0, 1500, 150)
+        if user.rect.colliderect(tree_rect1):
+            if user.rect.left < tree_rect1.right and user.rect.right > tree_rect1.right:
+                user.rect.left = tree_rect1.right
+            if user.rect.top < tree_rect1.bottom and user.rect.bottom > tree_rect1.bottom:
+                user.rect.top = tree_rect1.bottom
+            if user.rect.right > tree_rect1.left and user.rect.left < tree_rect1.left:
+                user.rect.right = tree_rect1.left
+            if user.rect.bottom > tree_rect1.top and user.rect.top < tree_rect1.top:
+                user.rect.bottom = tree_rect1.top
+        
+        tree_rect2=pygame.Rect(0, 150, 300, 300)
+        if user.rect.colliderect(tree_rect2):
+            if user.rect.top  < tree_rect2.bottom and user.rect.bottom > tree_rect2.bottom:
+                user.rect.top = tree_rect2.bottom
+            if user.rect.left < tree_rect2.right and user.rect.right > tree_rect2.right:
+                user.rect.left = tree_rect2.right
+            if user.rect.right > tree_rect2.left and user.rect.left < tree_rect2.left:
+                user.rect.right = tree_rect2.left
+
 
         pygame.display.update()
         clock.tick(60)
