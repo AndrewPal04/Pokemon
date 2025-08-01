@@ -440,7 +440,7 @@ def route_1(from_location):#Left of home city
                         json.dump(data, f, indent=4)
                 pygame.quit()
                 quit()
-        #Draw route 1
+        #Draw route 1 (still need image)
 
         pygame.display.update()
         clock.tick(60)
