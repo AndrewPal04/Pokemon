@@ -1,9 +1,10 @@
 {
     "name": "Ryott",
-    "x": 250,
-    "y": 250,
-    "scale": 4,
+    "x": 0,
+    "y": 502,
+    "scale": 2,
     "speed": 5,
+    "location": "home_city",
     "pymon_list": [
         {
             "name": "Pyrazzle",

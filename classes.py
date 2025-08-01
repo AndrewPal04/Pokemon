@@ -158,10 +158,10 @@ class Button:
         return event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos)
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, name, north_images, south_images, east_images, west_images, x, y, scale, speed):
+    def __init__(self, name, north_images, south_images, east_images, west_images, x, y, scale, speed, location="home"):
         super().__init__()
         self.name = name
-        self.speed=speed
+        self.speed = speed
         self.north_images = north_images
         self.south_images = south_images
         self.east_images = east_images
@@ -182,6 +182,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+        self.location = location  # Added location tracking
         self.pymon_list = []
 
     def draw(self, surface):
@@ -212,7 +213,7 @@ class Player(pygame.sprite.Sprite):
             self.direction = "east"
             moved = True
         
-        #On screen boundaries
+        # On-screen boundaries
         if self.rect.left < 0:
             self.rect.left = 0
         if self.rect.right > 1500:
@@ -250,8 +251,8 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(img, (scaled_width, scaled_height))
 
-        center=self.rect.center
-        self.rect=self.image.get_rect(center=center)
+        center = self.rect.center
+        self.rect = self.image.get_rect(center=center)
 
     def to_dict(self):
         return {
@@ -259,7 +260,8 @@ class Player(pygame.sprite.Sprite):
             "x": self.rect.x,
             "y": self.rect.y,
             "scale": self.scale,
-            "speed": self.speed,  # add this line
+            "speed": self.speed,
+            "location": self.location,  # Saving location
             "pymon_list": [p.to_dict() for p in self.pymon_list]
         }
 
@@ -269,8 +271,9 @@ class Player(pygame.sprite.Sprite):
         x = data.get("x", 750)
         y = data.get("y", 700)
         scale = data.get("scale", 0.4)
-        speed = data.get("speed", 5)  # Default if missing
+        speed = data.get("speed", 5)
+        location = data.get("location", "home")  # Loading location
 
-        player = cls(name, north_images, south_images, east_images, west_images, x, y, scale, speed)
+        player = cls(name, north_images, south_images, east_images, west_images, x, y, scale, speed, location)
         player.pymon_list = [Pymon.from_dict(p) for p in data.get("pymon_list", [])]
         return player

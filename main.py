@@ -225,9 +225,17 @@ def home():
     user.speed=5
     user.scale=4
     user.update_image()
+    user.location = "home"
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                if selected_slot_index is not None:
+                    user.location= "home"
+                    data=user.to_dict()
+                    data['x'] = user.rect.x
+                    data['y'] = user.rect.y
+                    with open(save_files[selected_slot_index], 'w') as f:
+                        json.dump(data, f, indent=4)
                 pygame.quit()
                 quit()
         screen.fill((0,0,0))
@@ -288,12 +296,20 @@ def home_city(from_location):
     user.scale=2
     user.update_image()
     user.speed=5
+    user.location = "home_city"
     if from_location=="home":
         user.rect.x=390
         user.rect.y=750
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                if selected_slot_index is not None:
+                    user.location= "home_city"
+                    data=user.to_dict()
+                    data['x'] = user.rect.x
+                    data['y'] = user.rect.y
+                    with open(save_files[selected_slot_index], 'w') as f:
+                        json.dump(data, f, indent=4)
                 pygame.quit()
                 quit()
         home_city.draw(screen)
@@ -333,9 +349,7 @@ def home_city(from_location):
             if user.rect.bottom > house3.top and user.rect.top < house3.top:
                 user.rect.bottom = house3.top
 
-        print(user.rect.x, user.rect.y)
-        #Still need adjusting
-        tree_rect1=pygame.Rect(0, 0, 1500, 150)
+        tree_rect1=pygame.Rect(0, 0, 1500, 100)#Top trees
         if user.rect.colliderect(tree_rect1):
             if user.rect.left < tree_rect1.right and user.rect.right > tree_rect1.right:
                 user.rect.left = tree_rect1.right
@@ -346,7 +360,7 @@ def home_city(from_location):
             if user.rect.bottom > tree_rect1.top and user.rect.top < tree_rect1.top:
                 user.rect.bottom = tree_rect1.top
         
-        tree_rect2=pygame.Rect(0, 150, 300, 300)
+        tree_rect2=pygame.Rect(0, 0, 200, 350)#Top left tree
         if user.rect.colliderect(tree_rect2):
             if user.rect.top  < tree_rect2.bottom and user.rect.bottom > tree_rect2.bottom:
                 user.rect.top = tree_rect2.bottom
@@ -355,13 +369,87 @@ def home_city(from_location):
             if user.rect.right > tree_rect2.left and user.rect.left < tree_rect2.left:
                 user.rect.right = tree_rect2.left
 
+        tree_rect3=pygame.Rect(1300, 0, 200, 350)#Top right tree
+        if user.rect.colliderect(tree_rect3):
+            if user.rect.top < tree_rect3.bottom and user.rect.bottom > tree_rect3.bottom:
+                user.rect.top = tree_rect3.bottom 
+            if user.rect.left < tree_rect3.right and user.rect.right > tree_rect3.right:
+                user.rect.left = tree_rect3.right
+            if user.rect.right > tree_rect3.left and user.rect.left < tree_rect3.left:
+                user.rect.right = tree_rect3.left
+
+        tree_rect4=pygame.Rect(0, 650, 100, 350)#Bottom left trees vertical
+        if user.rect.colliderect(tree_rect4):
+            if user.rect.top < tree_rect4.bottom and user.rect.bottom > tree_rect4.bottom:
+                user.rect.top = tree_rect4.bottom
+            if user.rect.left < tree_rect4.right and user.rect.right > tree_rect4.right:
+                user.rect.left = tree_rect4.right
+            if user.rect.right > tree_rect4.left and user.rect.left < tree_rect4.left:
+                user.rect.right = tree_rect4.left
+            if user.rect.bottom > tree_rect4.top and user.rect.top < tree_rect4.top:
+                user.rect.bottom = tree_rect4.top
+
+        tree_rect5=pygame.Rect(0, 900, 300, 100)#Bottom left trees horizontal
+        if user.rect.colliderect(tree_rect5):
+            if user.rect.top < tree_rect5.bottom and user.rect.bottom > tree_rect5.bottom:
+                user.rect.top = tree_rect5.bottom
+            if user.rect.left < tree_rect5.right and user.rect.right > tree_rect5.right:
+                user.rect.left = tree_rect5.right
+            if user.rect.right > tree_rect5.left and user.rect.left < tree_rect5.left:
+                user.rect.right = tree_rect5.left
+            if user.rect.bottom > tree_rect5.top and user.rect.top < tree_rect5.top:
+                user.rect.bottom = tree_rect5.top
+        tree_rect6=pygame.Rect(1400, 600, 100, 400)#Bottom right trees
+        if user.rect.colliderect(tree_rect6):
+            if user.rect.top < tree_rect6.bottom and user.rect.bottom > tree_rect6.bottom:
+                user.rect.top = tree_rect6.bottom
+            if user.rect.left < tree_rect6.right and user.rect.right > tree_rect6.right:
+                user.rect.left = tree_rect6.right
+            if user.rect.right > tree_rect6.left and user.rect.left < tree_rect6.left:
+                user.rect.right = tree_rect6.left
+            if user.rect.bottom > tree_rect6.top and user.rect.top < tree_rect6.top:
+                user.rect.bottom = tree_rect6.top
+        
+        if user.rect.left <0 and user.rect.top < 400 and user.rect.bottom > 500:
+            route_1("home_city")
 
         pygame.display.update()
         clock.tick(60)
     
    
     
-def route_1():#Left of home city
-    pass
+def route_1(from_location):#Left of home city
+    route_1IMG=pygame.image.load("n/a.png")
+    route_1=sprite(route_1IMG, 0, 0, 1)
+    user.scale=2
+    user.update_image()
+    user.speed=5
+    user.location = "route_1"
+    if from_location=="home_city":
+        user.rect.x=1400
+        user.rect.y=450
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                if selected_slot_index is not None:
+                    user.location= "home"
+                    data=user.to_dict()
+                    data['x'] = user.rect.x
+                    data['y'] = user.rect.y
+                    with open(save_files[selected_slot_index], 'w') as f:
+                        json.dump(data, f, indent=4)
+                pygame.quit()
+                quit()
+        #Draw route 1
 
-home()
+        pygame.display.update()
+        clock.tick(60)
+
+if newPlayer:
+    user.location = "home"
+if user.location == "home":
+    home()
+elif user.location == "home_city":
+    home_city("none")
+elif user.location == "route_1":
+    route_1()
