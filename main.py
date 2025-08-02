@@ -291,6 +291,8 @@ def home():
         clock.tick(60)
     
 def home_city(from_location):
+    pygame.mixer.music.load("home_city.mp3")
+    pygame.mixer.music.play(-1)
     home_cityIMG=pygame.image.load("home_city.png")
     home_city=sprite(home_cityIMG, 0, 0, 1)
     user.scale=2
@@ -299,7 +301,10 @@ def home_city(from_location):
     user.location = "home_city"
     if from_location=="home":
         user.rect.x=390
-        user.rect.y=750
+        user.rect.y=780
+    elif from_location=="route_1":
+        user.rect.x=100
+        user.rect.y=450
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -410,8 +415,23 @@ def home_city(from_location):
             if user.rect.bottom > tree_rect6.top and user.rect.top < tree_rect6.top:
                 user.rect.bottom = tree_rect6.top
         
-        if user.rect.left <0 and user.rect.top < 400 and user.rect.bottom > 500:
-            route_1("home_city")
+        if user.rect.left <20 and user.rect.top > 350 and user.rect.bottom < 550:
+            keystate = pygame.key.get_pressed()
+            if keystate[pygame.K_LEFT]:
+                pygame.mixer.music.stop()
+                screen.fill((255,255,255))
+                pygame.display.update()
+                pygame.time.delay(500)
+                route_1("home_city")
+
+        if user.rect.x > 355 and user.rect.x < 420 and user.rect.y < 701 and user.rect.y >550:
+            keystate = pygame.key.get_pressed()
+            if keystate[pygame.K_UP]:
+                pygame.mixer.music.stop()
+                screen.fill((255,255,255))
+                pygame.display.update()
+                pygame.time.delay(500)
+                home()
 
         pygame.display.update()
         clock.tick(60)
@@ -419,20 +439,20 @@ def home_city(from_location):
    
     
 def route_1(from_location):#Left of home city
-    route_1IMG=pygame.image.load("n/a.png")
+    route_1IMG=pygame.image.load("route_1.png")
     route_1=sprite(route_1IMG, 0, 0, 1)
     user.scale=2
     user.update_image()
     user.speed=5
     user.location = "route_1"
     if from_location=="home_city":
-        user.rect.x=1400
-        user.rect.y=450
+        user.rect.x=1300
+        user.rect.y=700
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 if selected_slot_index is not None:
-                    user.location= "home"
+                    user.location= "route_1"
                     data=user.to_dict()
                     data['x'] = user.rect.x
                     data['y'] = user.rect.y
@@ -440,16 +460,27 @@ def route_1(from_location):#Left of home city
                         json.dump(data, f, indent=4)
                 pygame.quit()
                 quit()
-        #Draw route 1 (still need image)
+        route_1.draw(screen)
+        user.draw(screen)
+        user.update()
+        print(user.rect.x, user.rect.y)
+        #Player Boundaries
+
+
+        if user.rect.right > 1470 and user.rect.top > 650 and user.rect.bottom < 800:
+            screen.fill((255,255,255))
+            pygame.display.update()
+            pygame.time.delay(500)
+            home_city("route_1")
 
         pygame.display.update()
         clock.tick(60)
-
-if newPlayer:
+pygame.mixer.init()
+if newPlayer and user.location is None:
     user.location = "home"
 if user.location == "home":
     home()
 elif user.location == "home_city":
     home_city("none")
 elif user.location == "route_1":
-    route_1()
+    route_1("none")
