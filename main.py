@@ -448,6 +448,19 @@ def route_1(from_location):#Left of home city
     if from_location=="home_city":
         user.rect.x=1300
         user.rect.y=700
+
+    #Wild Grass
+    wildGrassIMG=pygame.image.load("wildGrass.png")
+    wildGrass=pygame.sprite.Group()
+    grass1=sprite(wildGrassIMG, 850,600,0.2)
+    grass2=sprite(wildGrassIMG, 950,600,0.2)
+    grass3=sprite(wildGrassIMG, 900,600,0.2)
+    grass4=sprite(wildGrassIMG, 850,560,0.2)
+    grass5=sprite(wildGrassIMG, 950,560,0.2)
+    grass6=sprite(wildGrassIMG, 900,560,0.2)
+    grasses=[grass1, grass2, grass3, grass4,grass5, grass6]
+    for grass in grasses:
+        wildGrass.add(grass)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -461,6 +474,7 @@ def route_1(from_location):#Left of home city
                 pygame.quit()
                 quit()
         route_1.draw(screen)
+        wildGrass.draw(screen)
         user.draw(screen)
         user.update()
         print(user.rect.x, user.rect.y)

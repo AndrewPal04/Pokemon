@@ -196,19 +196,19 @@ class Player(pygame.sprite.Sprite):
         keystate = pygame.key.get_pressed()
         moved = False
 
-        if keystate[pygame.K_UP]:
+        if keystate[pygame.K_w]:
             self.rect.y -= self.speed
             self.direction = "north"
             moved = True
-        elif keystate[pygame.K_DOWN]:
+        elif keystate[pygame.K_s]:
             self.rect.y += self.speed
             self.direction = "south"
             moved = True
-        elif keystate[pygame.K_LEFT]:
+        elif keystate[pygame.K_a]:
             self.rect.x -= self.speed
             self.direction = "west"
             moved = True
-        elif keystate[pygame.K_RIGHT]:
+        elif keystate[pygame.K_d]:
             self.rect.x += self.speed
             self.direction = "east"
             moved = True

@@ -1,3 +1,33 @@
 {
-
+    "name": "Ryott",
+    "x": 821,
+    "y": 512,
+    "scale": 2,
+    "speed": 5,
+    "location": "route_1",
+    "pymon_list": [
+        {
+            "name": "Aquabble",
+            "level": 5,
+            "health": 44,
+            "type1": "Water",
+            "type2": null,
+            "moves": [
+                {
+                    "name": "Tackle",
+                    "type": "Normal",
+                    "damage": 40,
+                    "pp": 100,
+                    "effects": 0
+                },
+                {
+                    "name": "Water Pierce",
+                    "type": "Water",
+                    "damage": 45,
+                    "pp": 100,
+                    "effects": 0
+                }
+            ]
+        }
+    ]
 }
