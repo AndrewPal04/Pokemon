@@ -145,6 +145,8 @@ def home_city(from_location):
 
     if from_location == "home":
         user.rect.topleft = (390, 780)
+    elif from_location == "route_1":
+        user.rect.topleft = (100, 450)
 
     obstacles = [
         pygame.Rect(350, 550, 250, 150),
@@ -158,24 +160,38 @@ def home_city(from_location):
         pygame.Rect(1400, 600, 100, 400)
     ]
 
+    exit_route1 = pygame.Rect(0, 350, 20, 200)
+    exit_home = pygame.Rect(355, 550, 65, 150)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
         city.draw(screen)
         user.update()
         user.draw(screen)
+
+        keystate = pygame.key.get_pressed()
+
+        if user.rect.colliderect(exit_route1) and (keystate[pygame.K_LEFT] or keystate[pygame.K_a]):
+            pygame.display.update()
+            pygame.time.delay(300)
+            route_1("home_city")
+            return
+
+        if user.rect.colliderect(exit_home) and (keystate[pygame.K_UP] or keystate[pygame.K_w]):
+            pygame.display.update()
+            pygame.time.delay(300)
+            home()
+            return
+
         for o in obstacles:
             if user.rect.colliderect(o):
                 obstacle(user, o)
-        keys = pygame.key.get_pressed()
-        if user.rect.left < 20 and 350 < user.rect.centery < 550 and keys[pygame.K_LEFT]:
-            route_1("home_city")
-            break
-        if 355 < user.rect.x < 420 and 550 < user.rect.y < 701 and keys[pygame.K_UP]:
-            home()
-            break
+
+        
         pygame.display.update()
         clock.tick(60)
 
@@ -190,10 +206,10 @@ def route_1(from_location):
         user.rect.topleft = (1300, 700)
 
     obstacles = [
-        pygame.Rect(0, 0, 1500, 100),
-        pygame.Rect(0, 900, 1500, 100),
-        pygame.Rect(0, 0, 100, 1000),
-        pygame.Rect(1400, 0, 100, 1000)
+        pygame.Rect(0, 0, 1500, 150),
+        pygame.Rect(0, 830, 1500, 170),
+        pygame.Rect(0, 0, 50, 1000),
+        pygame.Rect(1450, 0, 50, 1000)
     ]
 
     while True:
@@ -207,9 +223,16 @@ def route_1(from_location):
         for o in obstacles:
             if user.rect.colliderect(o):
                 obstacle(user, o)
-        if user.rect.right > 1470 and 650 < user.rect.centery < 800:
+        
+        if user.rect.right > 1440 and 700 < user.rect.centery < 800:
             home_city("route_1")
             break
+
+        #For debugging purposes
+        for i in range(len(obstacles)):
+            pygame.draw.rect(screen, (255, 0, 0), obstacles[i], 2)
+        #Remove later
+         
         pygame.display.update()
         clock.tick(60)
 
